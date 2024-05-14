@@ -15,7 +15,7 @@ function getDatesUtil(){
    
     let firstDate = new Date(new Date().getFullYear(), 0, 1);
     let dates:Date[] = [];
-    while(firstDate.getMonth() < 9){
+    while(firstDate.getMonth() < 12){
         dates.push(  {
             index:dates.length,
             day:firstDate.getDay(),
@@ -47,7 +47,7 @@ const Calendar = (props:{})=>{
     const monthCal = monthOfDates.map((month, monthIndex) =>{
         let weeks:nullishDate[][] = [[]];
         for(let date of month){
-            if(date.day==0 && weeks[weeks.length-1].length > 0){
+            if(date.day===0 && weeks[weeks.length-1].length > 0){
                 weeks.push([]);
             }
             weeks[weeks.length-1].push(date);
@@ -58,7 +58,7 @@ const Calendar = (props:{})=>{
 
         const monthRows = weeks.map((week,weekIndex)=>{
             return <tr key={`month${monthIndex}week${weekIndex}`}>{
-                    [...new Array(7-week.length)].map((x,i)=>{return <td key={"spacer" + i + 'week'+weekIndex}> </td>})}
+                    [...new Array(7-week.length)].map((x,i)=>{return <td key={`spacer${i}week${weekIndex}`}> </td>})}
                     {week.map(date=>{
                         let className = '';
                         if(startDate!=null && date!=null && date.index === startDate.index){
@@ -95,10 +95,11 @@ const Calendar = (props:{})=>{
                             }}>{date.number}</td>})}
                 </tr>
         });
-        return <>
-            <tr key={`monthBarSpan${monthIndex}`} className='monthIdentifierSpan'><td colSpan={7}>{`${MONTH_LOOKUP[month[0].month]} ${month[0].year}`}</td></tr>
-            {monthRows}
-        </>
+        return <React.Fragment key={`fragmentWrapper${monthIndex}`}>
+                <tr key={`monthBarSpan${monthIndex}`} className='monthIdentifierSpan'><td colSpan={7}>{`${MONTH_LOOKUP[month[0].month]} ${month[0].year}`}</td></tr>
+                {monthRows}
+            </React.Fragment>
+
     })
    
     
